@@ -7,7 +7,6 @@
 
 import os
 import logging
-from io import StringIO
 
 def extract_text(filepath):
     """
@@ -24,11 +23,8 @@ def extract_text(filepath):
     file_ext = os.path.splitext(filepath)[1].lower()
 
     if file_ext == '.pdf':
-        from pdfminer.high_level import extract_text_to_fp
-        output = StringIO()
-        with open(filepath, 'rb') as file:
-            extract_text_to_fp(file, output)
-        return output.getvalue()
+        from pdfminer.high_level import extract_text
+        return extract_text(filepath)
 
     elif file_ext in ['.txt', '.md']:
         with open(filepath, 'r', encoding='utf-8') as file:
