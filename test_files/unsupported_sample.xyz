@@ -1,0 +1,5 @@
+This file intentionally uses an unsupported extension.
+
+It is used to test whether document_loader.extract_text() returns an empty string or a clear warning for unsupported formats.
+
+Fixed keyword: RAG_TEST_KEYWORD_2026
