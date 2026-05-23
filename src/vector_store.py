@@ -1,3 +1,16 @@
+"""
+FAISS 向量索引模块。
+
+职责：
+1. 构建本地向量索引（IndexFlatL2）。
+2. 维护向量位置到业务字段的映射（chunk_id/content/metadata）。
+3. 执行 top_k 相似检索并返回标准化结果。
+
+边界：
+- 不负责文档解析、文本分块、embedding 生成。
+- 仅消费已生成的向量矩阵并提供检索能力。
+"""
+
 from dataclasses import dataclass
 
 import numpy as np

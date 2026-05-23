@@ -1,5 +1,5 @@
 """
-第 6 节 embedding 实验脚本。
+embedding 实验脚本。
 
 读取测试 Markdown 中的 `documents` / `queries`，
 输出 query 与 document 的相似度排序结果。
@@ -83,3 +83,35 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# 运行结果示例（2026-05-23，Windows PowerShell）
+# 测试文件: D:\Projects\Codex\Projects\RAG_Project\test_files\embedding_sentences.md
+# documents 数量: 8
+# queries 数量: 6
+# document_embeddings shape: (8, 512)
+# document_embeddings dtype: float32
+#
+# query: 如何把文件内容变成可以处理的文本？
+# 最相似 document: 文档解析负责把 PDF、Word、Markdown 和 TXT 文件转换成纯文本。
+# 相似度: 0.6503
+#
+# query: 怎么把一篇很长的文档拆成小段？
+# 最相似 document: 文本分块会把长文本切成适合检索的小片段。
+# 相似度: 0.6649
+#
+# query: 怎样把句子变成向量？
+# 最相似 document: Embedding 可以把文本转换成向量，让机器计算语义相似度。
+# 相似度: 0.5709
+#
+# query: 哪个组件负责保存向量并做相似度搜索？
+# 最相似 document: FAISS 可以把文档向量存起来，并支持本地相似度检索。
+# 相似度: 0.6835
+#
+# query: RAG 为什么要先查资料再回答？
+# 最相似 document: RAG 系统会先检索资料，再让大模型基于上下文回答问题。
+# 相似度: 0.7276
+#
+# query: 今天适合出门走走吗？
+# 最相似 document: 今天天气很好，适合去公园散步。
+# 相似度: 0.6910

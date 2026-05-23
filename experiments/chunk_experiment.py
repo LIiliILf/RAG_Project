@@ -100,3 +100,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# 运行结果示例（2026-05-23，Windows PowerShell）
+# 测试文件: D:\Projects\Codex\Projects\RAG_Project\test_files\sample_rag.txt
+# 原始字符数: 345
+# 实验字符数: 1386
+#
+# | chunk_size | overlap | chunk 数量 | 最短 | 最长 | 平均 |
+# | --- | --- | --- | --- | --- | --- |
+# | 200 | 0 | 8 | 146 | 197 | 171.4 |
+# | 200 | 40 | 12 | 101 | 186 | 150.2 |
+# | 400 | 40 | 4 | 340 | 388 | 374.0 |
+# | 800 | 40 | 2 | 687 | 735 | 711.0 |
+# | 800 | 100 | 2 | 735 | 748 | 741.5 |
+# 默认参数预览：chunk_size=400, overlap=40（chunk 1~3 已打印）

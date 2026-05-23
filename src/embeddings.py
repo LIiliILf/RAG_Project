@@ -1,5 +1,5 @@
 """
-Embedding 工具模块。
+3.Embedding 工具模块。
 
 职责：
 1. 决定使用哪个本地/在线 embedding 模型。

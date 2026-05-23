@@ -1,5 +1,5 @@
 """
-第 7 节 FAISS 检索实验脚本。
+FAISS 检索实验脚本。
 
 流程：
 documents -> embeddings -> build FAISS index -> query embedding -> top_k 检索。
@@ -84,3 +84,144 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# 运行结果示例（2026-05-23，Windows PowerShell）
+# 测试文件: D:\Projects\Codex\Projects\RAG_Project\test_files\embedding_sentences.md
+# embedding 模型: D:\Projects\Codex\Projects\RAG_Project\models\bge-small-zh-v1.5
+# documents 数量: 8
+# top_k: 3
+# document_embeddings shape: (8, 512)
+# document_embeddings dtype: float32
+# FAISS index 类型: IndexFlatL2
+# FAISS index chunk 数量: 8
+# FAISS index 维度: 512
+# distance 说明: 使用 L2 距离，越小越相似
+#
+# query: 如何把文件内容变成可以处理的文本？
+# Top 1: chunk_0001 | distance=0.6995
+#
+# query: 怎么把一篇很长的文档拆成小段？
+# Top 1: chunk_0002 | distance=0.6703
+#
+# query: 怎样把句子变成向量？
+# Top 1: chunk_0003 | distance=0.8583
+#
+# query: 哪个组件负责保存向量并做相似度搜索？
+# Top 1: chunk_0004 | distance=0.6330
+#
+# query: RAG 为什么要先查资料再回答？
+# Top 1: chunk_0006 | distance=0.5449
+#
+# query: 今天适合出门走走吗？
+# Top 1: chunk_0007 | distance=0.6179
+
+# 测试文件: RAG_Project\test_files\embedding_sentences.md
+# embedding 模型: D:\Projects\Codex\Projects\RAG_Project\models\bge-small-zh-v1.5
+# documents 数量: 8
+# top_k: 3
+#
+# Loading weights: 100%|██████████| 71/71 [00:00<00:00, 5461.03it/s]
+# document_embeddings shape: (8, 512)
+# document_embeddings dtype: float32
+# FAISS index 类型: IndexFlatL2
+# FAISS index chunk 数量: 8
+# FAISS index 维度: 512
+# distance 说明: 使用 L2 距离，越小越相似
+#
+# ================================================================================
+# query: 如何把文件内容变成可以处理的文本？
+# query_embedding shape: (1, 512)
+# Top 3:
+# 1. distance=0.6995
+#    chunk_id: chunk_0001
+#    content: 文档解析负责把 PDF、Word、Markdown 和 TXT 文件转换成纯文本。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 0}
+# 2. distance=0.7952
+#    chunk_id: chunk_0002
+#    content: 文本分块会把长文本切成适合检索的小片段。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 1}
+# 3. distance=0.9409
+#    chunk_id: chunk_0003
+#    content: Embedding 可以把文本转换成向量，让机器计算语义相似度。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 2}
+# ================================================================================
+# query: 怎么把一篇很长的文档拆成小段？
+# query_embedding shape: (1, 512)
+# Top 3:
+# 1. distance=0.6703
+#    chunk_id: chunk_0002
+#    content: 文本分块会把长文本切成适合检索的小片段。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 1}
+# 2. distance=0.9157
+#    chunk_id: chunk_0001
+#    content: 文档解析负责把 PDF、Word、Markdown 和 TXT 文件转换成纯文本。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 0}
+# 3. distance=1.1023
+#    chunk_id: chunk_0004
+#    content: FAISS 可以把文档向量存起来，并支持本地相似度检索。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 3}
+# ================================================================================
+# query: 怎样把句子变成向量？
+# query_embedding shape: (1, 512)
+# Top 3:
+# 1. distance=0.8583
+#    chunk_id: chunk_0003
+#    content: Embedding 可以把文本转换成向量，让机器计算语义相似度。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 2}
+# 2. distance=1.0278
+#    chunk_id: chunk_0004
+#    content: FAISS 可以把文档向量存起来，并支持本地相似度检索。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 3}
+# 3. distance=1.1782
+#    chunk_id: chunk_0006
+#    content: RAG 系统会先检索资料，再让大模型基于上下文回答问题。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 5}
+# ================================================================================
+# query: 哪个组件负责保存向量并做相似度搜索？
+# query_embedding shape: (1, 512)
+# Top 3:
+# 1. distance=0.6330
+#    chunk_id: chunk_0004
+#    content: FAISS 可以把文档向量存起来，并支持本地相似度检索。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 3}
+# 2. distance=0.8399
+#    chunk_id: chunk_0003
+#    content: Embedding 可以把文本转换成向量，让机器计算语义相似度。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 2}
+# 3. distance=0.9977
+#    chunk_id: chunk_0005
+#    content: Prompt 构建会把用户问题和检索到的上下文组合起来。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 4}
+# ================================================================================
+# query: RAG 为什么要先查资料再回答？
+# query_embedding shape: (1, 512)
+# Top 3:
+# 1. distance=0.5449
+#    chunk_id: chunk_0006
+#    content: RAG 系统会先检索资料，再让大模型基于上下文回答问题。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 5}
+# 2. distance=1.0914
+#    chunk_id: chunk_0004
+#    content: FAISS 可以把文档向量存起来，并支持本地相似度检索。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 3}
+# 3. distance=1.1141
+#    chunk_id: chunk_0005
+#    content: Prompt 构建会把用户问题和检索到的上下文组合起来。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 4}
+# ================================================================================
+# query: 今天适合出门走走吗？
+# query_embedding shape: (1, 512)
+# Top 3:
+# 1. distance=0.6179
+#    chunk_id: chunk_0007
+#    content: 今天天气很好，适合去公园散步。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 6}
+# 2. distance=1.2792
+#    chunk_id: chunk_0008
+#    content: 晚餐可以选择米饭、青菜和鸡蛋。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 7}
+# 3. distance=1.4223
+#    chunk_id: chunk_0002
+#    content: 文本分块会把长文本切成适合检索的小片段。
+#    metadata: {'source': 'embedding_sentences.md', 'chunk_index': 1}

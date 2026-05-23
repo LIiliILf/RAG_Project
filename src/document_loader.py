@@ -1,7 +1,7 @@
 """
-文档加载器 —— 多格式文档文本提取
+1.文档加载器 —— 多格式文档文本提取
 
-- 了解不同文档格式（PDF、Word、Excel、PPT）的解析方式
+- 不同文档格式（PDF、Word、Excel、PPT）的解析方式
 - 将非结构化文档转换为纯文本
 """
 
@@ -12,7 +12,6 @@ import logging
 def extract_text(filepath):
     """
     从文件中提取纯文本内容
-
     支持格式：PDF / Word / Excel / PPT / 纯文本 / Markdown
 
     Args:
