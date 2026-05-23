@@ -1,3 +1,11 @@
+"""
+文档解析入口脚本。
+
+用途：
+1. 逐个读取测试文件。
+2. 输出解析状态、字符数、关键字命中和内容预览。
+"""
+
 from pathlib import Path
 
 from document_loader import extract_text
@@ -14,6 +22,7 @@ EMPTY_TEXT_HINTS = {
 
 
 def preview(text, limit=120):
+    """压缩空白并截断长文本，用于终端预览。"""
     compact_text = " ".join(text.split())
     if len(compact_text) <= limit:
         return compact_text
@@ -21,12 +30,14 @@ def preview(text, limit=120):
 
 
 def inspect_file(filepath):
+    """打印单个文件的解析结果。"""
     print("=" * 80)
     print(f"文件: {filepath.name}")
 
     try:
         text = extract_text(str(filepath))
     except ModuleNotFoundError as exc:
+        # 单独捕获缺依赖场景，给出可执行提示。
         print("状态: 解析失败")
         print(f"原因: 缺少依赖 {exc.name}")
         print("建议: 安装对应依赖后再试")
@@ -52,6 +63,7 @@ def inspect_file(filepath):
 
 
 def main():
+    """运行全部测试文件的解析检查。"""
     project_root = Path(__file__).resolve().parents[1]
     test_files_dir = project_root / "test_files"
 

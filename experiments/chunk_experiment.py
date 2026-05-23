@@ -1,9 +1,25 @@
+"""
+分块实验脚本。
+
+用途：
+1. 对比不同 `chunk_size` / `chunk_overlap` 参数的分块效果。
+2. 输出可直接粘贴到学习记录的统计表。
+"""
+
 from pathlib import Path
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+SRC_DIR = PROJECT_ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    # 保持 experiments 脱离 src 后仍可导入核心模块。
+    sys.path.append(str(SRC_DIR))
 
 from document_loader import extract_text
 from text_splitter import split_text
 
 
+# (chunk_size, chunk_overlap) 参数组合。
 PARAMETER_SETS = [
     (200, 0),
     (200, 40),
@@ -14,6 +30,7 @@ PARAMETER_SETS = [
 
 
 def summarize_chunks(chunks):
+    """统计 chunk 数量和长度分布。"""
     if not chunks:
         return {
             "count": 0,
@@ -32,6 +49,7 @@ def summarize_chunks(chunks):
 
 
 def print_chunk_preview(chunks, limit=3):
+    """打印前几个 chunk 的预览内容，便于人工检查可读性。"""
     for index, chunk in enumerate(chunks[:limit], start=1):
         preview = " ".join(chunk.split())
         if len(preview) > 160:
@@ -40,8 +58,8 @@ def print_chunk_preview(chunks, limit=3):
 
 
 def main():
-    project_root = Path(__file__).resolve().parents[1]
-    sample_file = project_root / "test_files" / "sample_rag.txt"
+    """执行分块参数实验并打印结果表。"""
+    sample_file = PROJECT_ROOT / "test_files" / "sample_rag.txt"
 
     text = extract_text(str(sample_file))
     if not text.strip():
@@ -73,6 +91,7 @@ def main():
 
     print()
     print("默认参数预览：chunk_size=400, overlap=40")
+    # 只打印推荐参数的预览，避免输出过长。
     for chunk_size, overlap, chunks, _summary in all_results:
         if chunk_size == 400 and overlap == 40:
             print_chunk_preview(chunks)

@@ -1,3 +1,12 @@
+"""
+文本分块模块。
+
+策略：
+1. 以 `chunk_size` 控制每段最大长度。
+2. 以 `chunk_overlap` 保留相邻段上下文。
+3. 优先按分隔符切分，最后再回退到硬切。
+"""
+
 DEFAULT_CHUNK_SIZE = 400
 DEFAULT_CHUNK_OVERLAP = 40
 DEFAULT_SEPARATORS = ["\n\n", "\n", "。", "，", "；", "：", " ", ""]
@@ -38,6 +47,7 @@ def split_text(
 
     while start < len(text):
         max_end = min(start + chunk_size, len(text))
+        # 优先在窗口内找最近分隔符，避免切断句子。
         end = _find_split_position(text, start, max_end, separators, chunk_size)
 
         chunk = text[start:end].strip()
@@ -47,8 +57,10 @@ def split_text(
         if end >= len(text):
             break
 
+        # 通过 overlap 保留边界上下文。
         next_start = end - chunk_overlap
         if next_start <= start:
+            # 防止异常参数导致死循环。
             next_start = end
         start = next_start
 
@@ -56,10 +68,12 @@ def split_text(
 
 
 def _find_split_position(text, start, max_end, separators, chunk_size):
+    """在 [start, max_end) 范围内选择最合适的切分点。"""
     if max_end >= len(text):
         return len(text)
 
     window = text[start:max_end]
+    # 至少要保留窗口 35% 的有效内容，避免切得过碎。
     min_break = max(1, int(chunk_size * 0.35))
 
     for separator in separators:
@@ -70,4 +84,5 @@ def _find_split_position(text, start, max_end, separators, chunk_size):
         if position >= min_break:
             return start + position + len(separator)
 
+    # 找不到分隔符时退化为硬切。
     return max_end

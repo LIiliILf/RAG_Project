@@ -8,6 +8,7 @@
 import os
 import logging
 
+
 def extract_text(filepath):
     """
     从文件中提取纯文本内容
@@ -23,6 +24,7 @@ def extract_text(filepath):
     file_ext = os.path.splitext(filepath)[1].lower()
 
     if file_ext == '.pdf':
+        # 延迟导入，避免无 PDF 依赖时影响其他格式解析。
         from pdfminer.high_level import extract_text
         return extract_text(filepath)
 
@@ -36,6 +38,7 @@ def extract_text(filepath):
             doc = Document(filepath)
             return "\n".join([para.text for para in doc.paragraphs])
         except ImportError:
+            # 返回空字符串，让上层统一按“空文本”处理。
             logging.error("处理Word文档需要安装python-docx库")
             return ""
 
@@ -68,5 +71,6 @@ def extract_text(filepath):
             return ""
 
     else:
+        # 未支持格式保持可预期行为：记录 warning 并返回空字符串。
         logging.warning(f"不支持的文件格式: {file_ext}")
         return ""

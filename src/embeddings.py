@@ -1,3 +1,11 @@
+"""
+Embedding 工具模块。
+
+职责：
+1. 决定使用哪个本地/在线 embedding 模型。
+2. 提供文档与查询向量化函数。
+3. 提供基础余弦相似度计算。
+"""
 
 import logging
 import os
@@ -21,6 +29,7 @@ LOCAL_MINILM_MODEL_PATH = PROJECT_ROOT / "models" / "all-MiniLM-L6-v2"
 # - shibing624/text2vec-base-chinese: 中文优化
 # - BAAI/bge-small-zh-v1.5: 中文优化，性能更好
 def resolve_embed_model_name():
+    """按优先级选择可用模型路径或模型名。"""
     if LOCAL_BGE_ZH_MODEL_PATH.exists():
         return str(LOCAL_BGE_ZH_MODEL_PATH)
     if LOCAL_MINILM_MODEL_PATH.exists():
@@ -41,6 +50,7 @@ def get_embed_model():
     from sentence_transformers import SentenceTransformer
     logging.info(f"加载向量化模型: {EMBED_MODEL_NAME}")
     model = SentenceTransformer(EMBED_MODEL_NAME)
+    # 新旧 sentence-transformers 版本的维度获取接口不同。
     if hasattr(model, "get_embedding_dimension"):
         dimension = model.get_embedding_dimension()
     else:
@@ -62,6 +72,7 @@ def encode_texts(texts, show_progress=False):
     """
     model = get_embed_model()
     embeddings = model.encode(texts, show_progress_bar=show_progress)
+    # FAISS 默认要求 float32，统一在这里转换。
     return np.array(embeddings).astype('float32')
 
 
@@ -73,6 +84,7 @@ def encode_query(query):
         numpy 数组，形状为 (1, embedding_dim)
     """
     model = get_embed_model()
+    # query 保持二维形状 (1, dim)，方便后续直接检索。
     embedding = model.encode([query])
     return np.array(embedding).astype('float32')
 
@@ -106,4 +118,5 @@ def cosine_similarity(query_embedding, document_embeddings):
 
     normalized_query = query_embedding / query_norm
     normalized_documents = document_embeddings / document_norms
+    # (n_docs, dim) @ (dim,) -> (n_docs,)
     return normalized_documents @ normalized_query[0]
